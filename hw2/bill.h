@@ -10,7 +10,7 @@ protected:
 
 public:
     Bill() : total(0) {}
-    Bill(double t) : total(0) {}
+    Bill(double t) : total(t) {}
     Bill operator+(Bill &other)
     {
         return Bill(other.total + total);

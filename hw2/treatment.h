@@ -4,6 +4,6 @@ using namespace std;
 struct Treatment
 {
     string name;
-    int cost;
+    double cost;
     string staffName;
 };

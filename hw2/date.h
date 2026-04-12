@@ -92,4 +92,8 @@ public:
             cout << "Please enter a valid date!" << endl;
         }
     }
+    // returns the number of days
+    int calculateDays(Date &curr, Date &other)
+    {
+        }
 };

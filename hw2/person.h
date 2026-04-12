@@ -33,6 +33,7 @@ protected:
     vector<Treatment> treatments;
     bool isDischarged;
     bool isCritical;
+    bool scheduledOperation;
 
 public:
     void display() override
@@ -61,6 +62,10 @@ public:
     int treatmentCount()
     {
         return treatments.size();
+    }
+    void setWard(Ward *w)
+    {
+        ward = w;
     }
 };
 
