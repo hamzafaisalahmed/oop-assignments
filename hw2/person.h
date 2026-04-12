@@ -14,6 +14,7 @@ protected:
     string contact;
 
 public:
+    Person(string n, Date d, int i, string c) : name(n), dob(d), id(i), contact(c) {}
     virtual void display()
     {
         cout << "Name: " << name << endl;
@@ -36,6 +37,7 @@ protected:
     bool scheduledOperation;
 
 public:
+    Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false) {}
     void display() override
     {
         Person::display();
@@ -43,12 +45,17 @@ public:
         cout << "Date of admission: ";
         admission.displayDate();
         cout << "Ward: ";
-        // finish for ward and treatments
+        if (ward)
+            cout << ward->getName() << endl;
+        else
+            cout << "N/A" << endl;
+        // treatments
     }
     Bill generateBill()
     {
         double sum = 500;
-        sum += ward->getDailyRate();
+        if (ward)
+            sum += ward->getDailyRate(); // need to get days and multiply with daily rate
         for (int i = 0; i < treatments.size(); i++)
         {
             sum += treatments[i].cost;
@@ -66,6 +73,18 @@ public:
     void setWard(Ward *w)
     {
         ward = w;
+    }
+    bool getIsCritical()
+    {
+        return isCritical;
+    }
+    bool getScheduledOperation()
+    {
+        return scheduledOperation;
+    }
+    void scheduleOperation()
+    {
+        scheduledOperation = true;
     }
 };
 
