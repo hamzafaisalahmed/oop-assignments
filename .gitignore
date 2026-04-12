@@ -1,0 +1,10 @@
+# Ignore all executable files
+*.exe
+
+# Ignore all PDF documents
+*.pdf
+
+# Optional: Ignore VS Code settings and build folders
+.vscode/
+bin/
+obj/
