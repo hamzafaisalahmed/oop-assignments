@@ -1,8 +1,22 @@
+#pragma once
 #include <iostream>
+#include <vector>
 
-using namespace std;
+class Patient;
+class Ward;
+class Bill;
 
+template <typename T, typename func>
 class Hospital
 {
 protected:
+    std::vector<Patient *> activePatients;
+    std::vector<Patient *> archive;
+    std::vector<Employee *> staff;
+
+public:
+    std::vector<T> filterPatients(func f)
+    {
+        for (const auto &x :)
+    }
 };

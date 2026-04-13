@@ -95,7 +95,7 @@ public:
     // returns the number of days
     friend int calculateDays(Date &curr, Date &other);
 
-    bool operator==(const Date &other)
+    bool operator==(const Date &other) const
     {
         if ((other.day == day) && (other.month == month) && (other.year == year))
             return true;

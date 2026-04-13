@@ -17,7 +17,6 @@ struct Appointment
 
     Appointment(Patient *p, StaffMember *e, Date d, std::string t);
 
-    // Using const and reference for efficiency
     bool operator==(const Appointment &other) const;
 };
 
