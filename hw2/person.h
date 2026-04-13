@@ -1,123 +1,94 @@
+#pragma once
+
 #include <iostream>
+#include <string>
 #include <vector>
 #include "date.h"
-#include "ward.h"
 #include "treatment.h"
-using namespace std;
+#include "bill.h"
+
+class Ward;
+class Patient;
 
 class Person
 {
 protected:
-    string name;
+    std::string name;
     Date dob;
     int id;
-    string contact;
+    std::string contact;
 
 public:
-    Person(string n, Date d, int i, string c) : name(n), dob(d), id(i), contact(c) {}
-    virtual void display()
-    {
-        cout << "Name: " << name << endl;
-        cout << "Date of birth: ";
-        dob.displayDate();
-        cout << "ID: " << id << endl;
-        cout << "Contact: " << contact << endl;
-    }
+    Person(std::string n, Date d, int i, std::string c);
+    virtual void display();
+    virtual ~Person();
 };
 
 class Patient : public Person
 {
 protected:
-    string diagnosis;
+    std::string diagnosis;
     Date admission;
     Ward *ward;
-    vector<Treatment> treatments;
+    std::vector<Treatment> treatments;
     bool isDischarged;
     bool isCritical;
     bool scheduledOperation;
 
 public:
-    Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false) {}
-    void display() override
-    {
-        Person::display();
-        cout << "Diagnosis: " << diagnosis << endl;
-        cout << "Date of admission: ";
-        admission.displayDate();
-        cout << "Ward: ";
-        if (ward)
-            cout << ward->getName() << endl;
-        else
-            cout << "N/A" << endl;
-        // treatments
-    }
-    Bill generateBill()
-    {
-        double sum = 500;
-        if (ward)
-            sum += ward->getDailyRate(); // need to get days and multiply with daily rate
-        for (int i = 0; i < treatments.size(); i++)
-        {
-            sum += treatments[i].cost;
-        }
-        return Bill(sum);
-    }
-    void addTreatment(Treatment t)
-    {
-        treatments.push_back(t);
-    }
-    int treatmentCount()
-    {
-        return treatments.size();
-    }
-    void setWard(Ward *w)
-    {
-        ward = w;
-    }
-    bool getIsCritical()
-    {
-        return isCritical;
-    }
-    bool getScheduledOperation()
-    {
-        return scheduledOperation;
-    }
-    void scheduleOperation()
-    {
-        scheduledOperation = true;
-    }
+    Patient(std::string n, Date d, int i, std::string c, std::string diag, Date adm, bool crit);
+    void display() override;
+
+    Bill generateBill();
+    Bill totalBill();
+
+    void addTreatment(Treatment t);
+    int treatmentCount();
+    void setWard(Ward *w);
+
+    bool getIsCritical();
+    bool getScheduledOperation();
+    void scheduleOperation();
 };
 
-class Employee : public Person
+class StaffMember : public Person
 {
 protected:
     double salary;
-    string department;
-    double BillingRate;
+    std::string department;
 
 public:
-    virtual double calculateBillingRate()
-    {
-        return BillingRate;
-    }
+    StaffMember(std::string n, Date d, int i, std::string c, double sal, std::string dept);
+    virtual double calculateBillingRate() = 0;
+    virtual void display() override;
 };
 
-class GP : public Employee
+class GP : public StaffMember
 {
-protected:
-    // hourly consultation fee
+public:
+    GP(std::string n, Date d, int i, std::string c, double sal, std::string dept);
+    double calculateBillingRate() override;
+    void display() override;
 };
 
-class Surgeon : public Employee
+class Surgeon : public StaffMember
 {
 protected:
-    string specialisation;
-    // billing rate
+    std::string specialisation;
+
+public:
+    Surgeon(std::string n, Date d, int i, std::string c, double sal, std::string dept, std::string s);
+    double calculateBillingRate() override;
+    void display() override;
 };
 
-class Nurse : public Employee
+class Nurse : public StaffMember
 {
 protected:
-    Ward ward;
-    // billing rate
+    Ward *ward;
+
+public:
+    Nurse(std::string n, std::string d, int i, std::string c, double sal, std::string dept, double f, Ward *w);
+    double calculateBillingRate() override;
+    void display() override;
 };

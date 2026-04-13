@@ -1,71 +1,40 @@
-#include <iostream>
-#include <vector>
+#pragma once
 #include "person.h"
-using namespace std;
+#include <vector>
+#include <string>
+#include "date.h"
+
+// Forward declarations
+class Patient;
+class StaffMember;
 
 struct Appointment
 {
     Patient *patient;
-    Employee *doctor;
+    StaffMember *doctor;
     Date date;
-    string time;
-    Appointment(Patient *p, Employee *e, Date d, string t) : patient(p), doctor(e), date(d), time(t) {}
-    bool operator==(const Appointment &other) const
-    {
-        return (patient == other.patient &&
-                doctor == other.doctor &&
-                date == other.date &&
-                time == other.time);
-    }
+    std::string time;
+
+    Appointment(Patient *p, StaffMember *e, Date d, std::string t);
+
+    // Using const and reference for efficiency
+    bool operator==(const Appointment &other) const;
 };
 
 class AppointmentBook
 {
 protected:
-    vector<Appointment> appointments;
+    std::vector<Appointment> appointments;
 
 public:
-    bool add(Appointment &app)
-    {
-        for (auto x : appointments)
-        {
-            if ((x.doctor == app.doctor || x.patient == app.patient) && x.date == app.date && x.time == app.time)
-                return false;
-        }
-        appointments.push_back(app);
-        return true;
-    }
-    vector<Appointment> getAppointmentByStaff(Employee *s, Date d)
-    {
-        vector<Appointment> temp;
-        for (auto &x : appointments)
-        {
-            if (x.doctor == s && x.date == d)
-                temp.push_back(x);
-        }
-        return temp;
-    }
-    vector<Appointment> getAppointmentByPatient(Patient *p)
-    {
-        vector<Appointment> temp;
-        for (auto &x : appointments)
-        {
-            if (x.patient == p)
-                temp.push_back(x);
-        }
-        return temp;
-    }
-    bool cancel(Appointment &a)
-    {
-        for (int i = 0; i < appointments.size(); i++)
-        {
-            if (a == appointments[i])
-            {
-                appointments.erase(appointments.begin() + i);
-                return true;
-            }
-        }
-        return false;
-    }
-    ~AppointmentBook() {}
+    AppointmentBook() {} // Explicit constructor
+
+    bool add(const Appointment &app);
+
+    std::vector<Appointment> getAppointmentByStaff(StaffMember *s, Date d);
+    std::vector<Appointment> getAppointmentByPatient(Patient *p);
+
+    bool cancel(const Appointment &a);
+
+    ~AppointmentBook();
 };

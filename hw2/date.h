@@ -15,26 +15,26 @@ public:
         int maxDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
         // leap check
-        bool isLeap = false;
-        if (y % 4 == 0)
-        {
-            if (y % 100 != 0 || y % 400 == 0)
-            {
-                isLeap = true;
-            }
-        }
+        // bool isLeap = false;
+        // if (y % 4 == 0)
+        // {
+        //     if (y % 100 != 0 || y % 400 == 0)
+        //     {
+        //         isLeap = true;
+        //     }
+        // }
 
-        if (m == 2)
-        {
-            if (isLeap == true)
-            {
-                maxDays[1] = 29;
-            }
-            else
-            {
-                maxDays[1] = 28;
-            }
-        }
+        // if (m == 2)
+        // {
+        //     if (isLeap == true)
+        //     {
+        //         maxDays[1] = 29;
+        //     }
+        //     else
+        //     {
+        //         maxDays[1] = 28;
+        //     }
+        // }
 
         if (maxDays[m - 1] < d)
             return false;
@@ -93,7 +93,28 @@ public:
         }
     }
     // returns the number of days
-    int calculateDays(Date &curr, Date &other)
+    friend int calculateDays(Date &curr, Date &other);
+
+    bool operator==(const Date &other)
     {
-        }
+        if ((other.day == day) && (other.month == month) && (other.year == year))
+            return true;
+        else
+            return false;
+    }
 };
+
+int calculateDays(Date &curr, Date &other)
+{
+    int maxDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int currM = 0;
+    int otherM = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        if (i < curr.month - 1)
+            currM += maxDays[i];
+        if (i < other.month - 1)
+            otherM += maxDays[i];
+    }
+    return (curr.year * 365 + currM + curr.day) - (other.year * 365 + otherM + other.day);
+}

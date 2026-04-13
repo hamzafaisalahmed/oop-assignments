@@ -1,105 +1,52 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include "person.h"
-using namespace std;
+
+class Patient; // Forward declaration
 
 class Ward
 {
 protected:
-    string name;
+    std::string name;
     int capacity;
     const double dailyRate;
-    vector<Patient *> patients;
+    std::vector<Patient *> patients;
 
 public:
-    Ward(string n, int cap, double rate) : name(n), capacity(cap), dailyRate(rate)
-    {
-        if (cap == 0)
-            capacity = 1;
-    }
-    bool operator<(const Ward &other)
-    {
-        return ((double)patients.size() / capacity) < ((double)other.patients.size() / capacity);
-    }
-    bool operator>(const Ward &other)
-    {
-        return ((double)patients.size() / capacity) > ((double)other.patients.size() / capacity);
-    }
-    bool operator==(const Ward &other)
-    {
-        return ((double)patients.size() / capacity) == ((double)other.patients.size() / capacity);
-    }
-    virtual bool admit(Patient *p) = 0;
-    bool discharge(Patient *p)
-    {
-        for (int i = 0; i < patients.size(); i++)
-        {
-            if (patients[i] == p)
-            {
-                patients.erase(patients.begin() + i);
-                p->setWard(nullptr);
-                return true;
-            }
-        }
-        return false;
-    }
-    double getDailyRate()
-    {
-        return dailyRate;
-    }
-    string getName()
-    {
-        return name;
-    }
+    Ward(std::string n, int cap, double rate);
+    virtual ~Ward();
 
-    virtual ~Ward() {}
+    // Signatures only
+    bool operator<(const Ward &other) const;
+    bool operator>(const Ward &other) const;
+    bool operator==(const Ward &other) const;
+
+    virtual bool admit(Patient *p) = 0;
+    bool discharge(Patient *p);
+
+    double getDailyRate() const;
+    std::string getName() const;
 };
 
 class GeneralWard : public Ward
 {
 public:
-    GeneralWard(string n, int cap) : Ward(n, cap, 100.0) {}
-    bool admit(Patient *p) override
-    {
-        if (patients.size() < capacity)
-        {
-            patients.push_back(p);
-            p->setWard(this);
-            return true;
-        }
-        return false;
-    }
+    GeneralWard(std::string n, int cap);
+    bool admit(Patient *p) override;
 };
 
 class ICU : public Ward
 {
 public:
-    ICU(string n, int cap) : Ward(n, cap, 200.0) {}
-    bool admit(Patient *p) override
-    {
-        if (patients.size() < capacity && p->getIsCritical())
-        {
-            patients.push_back(p);
-            p->setWard(this);
-            return true;
-        }
-        return false;
-    }
+    ICU(std::string n, int cap);
+    bool admit(Patient *p) override;
 };
 
 class SurgicalWard : public Ward
 {
 public:
-    SurgicalWard(string n, int cap) : Ward(n, cap, 150.0) {}
-    bool admit(Patient *p) override
-    {
-        if (patients.size() < capacity && p->getScheduledOperation())
-        {
-            patients.push_back(p);
-            p->setWard(this);
-            return true;
-        }
-        return false;
-    }
+    SurgicalWard(std::string n, int cap);
+    bool admit(Patient *p) override;
 };
