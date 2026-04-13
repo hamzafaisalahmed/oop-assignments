@@ -6,31 +6,31 @@ using namespace std;
 class Bill
 {
 protected:
-    double total;
+    double totalBill;
 
 public:
-    Bill() : total(0) {}
-    Bill(double t) : total(t) {}
-    Bill operator+(const Bill &other)
+    Bill() : totalBill(0) {}
+    Bill(double t) : totalBill(t) {}
+    Bill operator+(const Bill &other) const
     {
-        return Bill(other.total + total);
+        return Bill(other.totalBill + totalBill);
     }
     friend ostream &operator<<(ostream &os, const Bill &b);
-    bool operator==(const Bill &other)
+    bool operator==(const Bill &other) const
     {
-        if (other.total == total)
+        if (other.totalBill == totalBill)
             return true;
         else
             return false;
     }
     double total()
     {
-        return total;
+        return totalBill;
     }
 };
 
 ostream &operator<<(ostream &os, const Bill &b)
 {
-    os << b.total;
+    os << b.totalBill;
     return os;
 }

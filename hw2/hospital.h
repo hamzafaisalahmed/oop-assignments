@@ -12,7 +12,7 @@ class Hospital
 protected:
     std::vector<Patient *> activePatients;
     std::vector<Patient *> archive;
-    std::vector<Employee *> staff;
+    std::vector<StaffMember *> staff;
 
 public:
     std::vector<T> filterPatients(func f)

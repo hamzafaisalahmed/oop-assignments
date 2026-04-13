@@ -12,11 +12,11 @@ class Hospital
 protected:
     vector<Patient *> activePatients;
     vector<Patient *> archive;
-    vector<Employee *> staff;
+    vector<StaffMember *> staff;
     vector<Ward *> wards;
 
 public:
-    vector<Patient *> filterPatients(func f)
+    vector<Patient> filterPatients(func f)
     {
         vector<Patient *> temp;
         for (const auto &x : activePatients)
@@ -26,7 +26,7 @@ public:
         }
         return temp;
     }
-    vector<Patient *> sortPatients(func f)
+    vector<Patient> sortPatients(func f)
     {
         vector<Patient *> temp;
         for (const auto &x : activePatients)
@@ -36,6 +36,17 @@ public:
         sort(temp.begin(), temp.end(), f);
         return temp;
     }
+    vector<StaffMember *> filterStaff(func f)
+    {
+        vector<StaffMember *> temp;
+        for (const auto &x : staff)
+        {
+            if (f(*x))
+                temp.push_back(x);
+        }
+        return temp;
+    }
+
     void admit(Patient &p)
     {
     }
