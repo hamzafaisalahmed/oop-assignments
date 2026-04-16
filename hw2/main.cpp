@@ -159,15 +159,18 @@ int main()
     // TC 07
 
     Hospital h;
+    h.addWard(new GeneralWard("Ward 7", 10));
     h.admit(patient1);
     h.discharge(patient1.getId());
 
     assert(h.isAdmitted(patient1.getId()) == false);
-
+    check(h.isAdmitted(patient1.getId()) == false, "TC-07: patient is no longer admitted");
     assert(h.isArchived(patient1.getId()) == true);
+    check(h.isArchived(patient1.getId()) == true, "TC-07: patient is archived");
 
     // =========================================================================
     cout << "\n========== TC-08: Lambda Filtering & Sorting ==========\n";
+    // populate the hospital
     Hospital h2;
     GeneralWard *gw2 = new GeneralWard("Ward B", 50);
     ICU *icu2 = new ICU("ICU-2", 20);
@@ -186,13 +189,9 @@ int main()
     pc->addTreatment(Treatment("Angiogram", 12000.0, "Dr. Khan"));
     pd->addTreatment(Treatment("Medication", 800.0, "Nurse Sara"));
 
-    h2.editPatientinWard(pa, icu2->admit(*pa));
     h2.admit(*pa);
-    h2.editPatientinWard(pb, icu2->admit(*pb));
     h2.admit(*pb);
-    h2.editPatientinWard(pc, icu2->admit(*pc));
     h2.admit(*pc);
-    h2.editPatientinWard(pd, gw2->admit(*pd));
     h2.admit(*pd);
     // TC 08
 
