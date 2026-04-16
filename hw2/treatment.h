@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <string>
-
 struct Treatment
 {
     std::string name;

@@ -29,4 +29,5 @@ struct Bill
         os << b.amount;
         return os;
     }
+    ~Bill() {}
 };

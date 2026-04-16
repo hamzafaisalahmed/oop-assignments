@@ -4,10 +4,13 @@
 #include <string>
 #include "person.h"
 #include "ward.h"
+#include "appointment.h"
+#include "bill.h"
 
 class Patient;
 class Ward;
 class Bill;
+class AppointmentBook;
 
 class Hospital
 {
@@ -16,6 +19,7 @@ protected:
     std::vector<Patient *> archive;
     std::vector<StaffMember *> staff;
     std::vector<Ward *> wards;
+    AppointmentBook appointmentBook;
 
 public:
     template <typename func>
@@ -54,7 +58,7 @@ public:
     std::vector<Patient *> getPatientsByStaff(StaffMember *s) const;
     void editPatientinWard(Patient *p, bool admit);
     void admit(Patient &p);
-    Bill discharge(Patient &p);
+    Bill discharge(int id);
     bool isAdmitted(int id) const;
     bool isArchived(int id) const;
     double wardRevenue(std::string wardName) const;

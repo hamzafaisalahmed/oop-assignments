@@ -26,7 +26,7 @@ bool Ward::operator==(const Ward &other) const
     return ((double)patients.size() / capacity) == ((double)other.patients.size() / other.capacity);
 }
 
-bool Ward::admit(Patient *p)
+bool Ward::admit(Patient &p)
 {
     // pure virtual
     return false;
@@ -68,12 +68,12 @@ Ward::~Ward() {}
 
 GeneralWard::GeneralWard(string n, int cap) : Ward(n, cap, 100.0) {}
 
-bool GeneralWard::admit(Patient *p)
+bool GeneralWard::admit(Patient &p)
 {
     if (patients.size() < capacity)
     {
-        patients.push_back(p);
-        p->setWard(this);
+        patients.push_back(&p);
+        p.setWard(this);
         return true;
     }
     return false;
@@ -81,12 +81,12 @@ bool GeneralWard::admit(Patient *p)
 
 ICU::ICU(string n, int cap) : Ward(n, cap, 200.0) {}
 
-bool ICU::admit(Patient *p)
+bool ICU::admit(Patient &p)
 {
-    if (patients.size() < capacity && p->getIsCritical())
+    if (patients.size() < capacity && p.getIsCritical())
     {
-        patients.push_back(p);
-        p->setWard(this);
+        patients.push_back(&p);
+        p.setWard(this);
         return true;
     }
     return false;
@@ -94,12 +94,12 @@ bool ICU::admit(Patient *p)
 
 SurgicalWard::SurgicalWard(string n, int cap) : Ward(n, cap, 150.0) {}
 
-bool SurgicalWard::admit(Patient *p)
+bool SurgicalWard::admit(Patient &p)
 {
-    if (patients.size() < capacity && p->getScheduledOperation())
+    if (patients.size() < capacity && p.getScheduledOperation())
     {
-        patients.push_back(p);
-        p->setWard(this);
+        patients.push_back(&p);
+        p.setWard(this);
         return true;
     }
     return false;

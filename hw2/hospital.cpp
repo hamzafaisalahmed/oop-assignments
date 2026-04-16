@@ -27,7 +27,7 @@ void Hospital::admit(Patient &p)
     }
     for (const auto &x : wards)
     {
-        if (x->admit(&p))
+        if (x->admit(p))
         {
             activePatients.push_back(&p);
             return;
@@ -35,19 +35,26 @@ void Hospital::admit(Patient &p)
     }
 }
 
-Bill Hospital::discharge(Patient &p)
+Bill Hospital::discharge(int id)
 {
-    for (auto &x : wards)
+    for (auto &p : activePatients)
     {
-        if (x->discharge(&p))
+        if (id == p->getId())
         {
-            archive.push_back(&p);
-            p.discharge(true);
-            activePatients.erase(remove(activePatients.begin(), activePatients.end(), &p), activePatients.end());
-            break;
+            for (auto &x : wards)
+            {
+                if (x->discharge(p))
+                {
+                    archive.push_back(p);
+                    p->discharge(true);
+                    activePatients.erase(remove(activePatients.begin(), activePatients.end(), p), activePatients.end());
+                    break;
+                }
+            }
+            return p->generateBill();
         }
     }
-    return p.generateBill();
+    throw invalid_argument("Patient not admitted");
 }
 
 bool Hospital::isAdmitted(int id) const
@@ -103,14 +110,13 @@ vector<Patient *> Hospital::getPatientsByStaff(StaffMember *s) const
     vector<Patient *> temp;
     for (const auto &x : activePatients)
     {
-        for (const auto &t : x->treatments)
-        {
-            if (t.doctorName == s->getName())
-            {
-                temp.push_back(x);
-                break;
-            }
-        }
+        if (x->getPatientsByStaff(s))
+            temp.push_back(x);
+    }
+    for (const auto &x : archive)
+    {
+        if (x->getPatientsByStaff(s))
+            temp.push_back(x);
     }
     return temp;
 }

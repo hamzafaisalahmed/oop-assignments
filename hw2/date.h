@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
-// make string constructor
+#include <stdexcept>
 using namespace std;
 
 class Date
@@ -14,28 +14,6 @@ public:
         if (m < 1 || m > 12 || d < 1)
             return false;
         int maxDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-        // leap check
-        // bool isLeap = false;
-        // if (y % 4 == 0)
-        // {
-        //     if (y % 100 != 0 || y % 400 == 0)
-        //     {
-        //         isLeap = true;
-        //     }
-        // }
-
-        // if (m == 2)
-        // {
-        //     if (isLeap == true)
-        //     {
-        //         maxDays[1] = 29;
-        //     }
-        //     else
-        //     {
-        //         maxDays[1] = 28;
-        //     }
-        // }
 
         if (maxDays[m - 1] < d)
             return false;
@@ -51,13 +29,22 @@ public:
         }
         else
         {
-            cout << "Please enter a valid date!" << endl;
-            day = 1;
-            month = 1;
-            year = 2000;
-            // setting to default values
+            throw invalid_argument("Please enter a valid date!");
         }
     }
+
+    Date(string dateString)
+    {
+        int d, m, y;
+        y = stoi(dateString.substr(0, 4));
+        m = stoi(dateString.substr(5, 2));
+        d = stoi(dateString.substr(8, 2));
+        if (!isValidDate(d, m, y))
+        {
+            throw invalid_argument("Please enter a valid date!");
+        }
+    }
+
     Date()
     {
         day = 1;
@@ -90,7 +77,7 @@ public:
         }
         else
         {
-            cout << "Please enter a valid date!" << endl;
+            throw invalid_argument("Please enter a valid date!");
         }
     }
     // returns the number of days
@@ -103,9 +90,10 @@ public:
         else
             return false;
     }
+    ~Date() {}
 };
 
-int calculateDays(const Date &curr, const Date &other)
+inline int calculateDays(const Date &curr, const Date &other)
 {
     int maxDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int currM = 0;

@@ -28,7 +28,7 @@ int Person::getId() const
 
 Person::~Person() {}
 
-Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr) {}
+Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr), alltimeBill(0) {}
 
 void Patient::display() const
 {
@@ -55,29 +55,45 @@ void Patient::display() const
     cout << endl;
 }
 
-double Patient::totalBill() const
+double Patient::totalBill()
 {
     double sum = 500;
     int days = calculateDays(currentDate, admission);
+
     if (ward)
-        sum += (ward->getDailyRate() * days); // need to get days and multiply with daily rate
+        sum += (ward->getDailyRate() * days);
     for (int i = 0; i < treatments.size(); i++)
     {
         sum += treatments[i].cost;
     };
+    alltimeBill = sum;
     return sum;
 }
 
-Bill Patient::generateBill() const
+Bill Patient::generateBill()
 {
-    return Bill(totalBill());
+    if (alltimeBill != 0)
+    {
+        return Bill(alltimeBill);
+    }
+    return Bill(this->totalBill());
 }
 
 void Patient::addTreatment(const Treatment &t)
 {
     treatments.push_back(t);
 }
-
+bool Patient::getPatientsByStaff(StaffMember *s) const
+{
+    for (const auto &t : treatments)
+    {
+        if (t.doctorName == s->getName())
+        {
+            return true;
+        }
+    }
+    return false;
+}
 int Patient::treatmentCount() const
 {
     return treatments.size();

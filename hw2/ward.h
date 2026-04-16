@@ -18,7 +18,7 @@ public:
     bool operator<(const Ward &other) const;
     bool operator>(const Ward &other) const;
     bool operator==(const Ward &other) const;
-    virtual bool admit(Patient *p) = 0;
+    virtual bool admit(Patient &p) = 0;
     bool discharge(Patient *p);
     double getDailyRate() const;
     std::string getName() const;
@@ -30,19 +30,19 @@ class GeneralWard : public Ward
 {
 public:
     GeneralWard(std::string n, int cap);
-    bool admit(Patient *p) override;
+    bool admit(Patient &p) override;
 };
 
 class ICU : public Ward
 {
 public:
     ICU(std::string n, int cap);
-    bool admit(Patient *p) override;
+    bool admit(Patient &p) override;
 };
 
 class SurgicalWard : public Ward
 {
 public:
     SurgicalWard(std::string n, int cap);
-    bool admit(Patient *p) override;
+    bool admit(Patient &p) override;
 };

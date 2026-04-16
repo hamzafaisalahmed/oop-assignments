@@ -5,8 +5,6 @@
 #include "appointment.h"
 using namespace std;
 
-Appointment::Appointment(Patient *p, StaffMember *e, Date d, string t) : patient(p), doctor(e), date(d), time(t) {}
-
 bool Appointment::operator==(const Appointment &other) const
 {
     return ((patient == other.patient) &&
@@ -46,6 +44,19 @@ vector<Appointment> AppointmentBook::getAppointmentByPatient(Patient *p) const
             temp.push_back(x);
     }
     return temp;
+}
+
+void AppointmentBook::completedAppointment(const Appointment &a)
+{
+    for (int i = 0; i < appointments.size(); i++)
+    {
+        if (a == appointments[i])
+        {
+            completedAppointments.push_back(a);
+            appointments.erase(appointments.begin() + i);
+            return;
+        }
+    }
 }
 
 bool AppointmentBook::cancel(const Appointment &a)
