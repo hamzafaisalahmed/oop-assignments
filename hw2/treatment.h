@@ -1,15 +1,12 @@
+#pragma once
 #include <iostream>
 #include <string>
-using namespace std;
+
 struct Treatment
 {
-    string name;
+    std::string name;
     double cost;
-    string staffName;
-    void print()
-    {
-        cout << "Treatment name: " << name << endl;
-        cout << "Treatment cost: " << cost << endl;
-        cout << "Treatment staff: " << staffName << endl;
-    }
+    std::string doctorName;
+    Treatment(std::string n, double c, std::string dn) : name(n), cost(c), doctorName(dn) {}
+    void print() const { std::cout << "Treatment: " << name << ", Cost: " << cost << ", Doctor: " << doctorName << std::endl; }
 };

@@ -10,171 +10,176 @@ using namespace std;
 // assumes current date will be global variable
 extern Date currentDate;
 
-// add totalBill logic
-class Person
+Person::Person(string n, Date d, int i, string c) : name(n), dob(d), id(i), contact(c) {}
+
+void Person::display() const
 {
-protected:
-    string name;
-    Date dob;
-    int id;
-    string contact;
+    cout << "Name: " << name << endl;
+    cout << "Date of birth: ";
+    dob.displayDate();
+    cout << "ID: " << id << endl;
+    cout << "Contact: " << contact << endl;
+}
 
-public:
-    Person(string n, Date d, int i, string c) : name(n), dob(d), id(i), contact(c) {}
-    virtual void display()
-    {
-        cout << "Name: " << name << endl;
-        cout << "Date of birth: ";
-        dob.displayDate();
-        cout << "ID: " << id << endl;
-        cout << "Contact: " << contact << endl;
-    }
-    virtual ~Person() {}
-};
-
-class Patient : public Person
+int Person::getId() const
 {
-protected:
-    string diagnosis;
-    Date admission;
-    Ward *ward;
-    vector<Treatment> treatments;
-    bool isDischarged;
-    bool isCritical;
-    bool scheduledOperation;
+    return id;
+}
 
-public:
-    Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false) {}
-    void display() override
-    {
-        Person::display();
-        cout << "Diagnosis: " << diagnosis << endl;
-        cout << "Date of admission: ";
-        admission.displayDate();
-        cout << "Ward: ";
-        if (ward)
-            cout << ward->getName() << endl;
-        else
-            cout << "N/A" << endl;
-        // treatments
-        for (int i = 0; i < treatments.size(); i++)
-        {
-            treatments[i].print();
-        }
-        if (isCritical)
-            cout << "Critical" << endl;
-        if (scheduledOperation)
-            cout << "Operation scheduled" << endl;
-        if (isDischarged)
-            cout << "Discharged" << endl;
-    }
-    Bill generateBill()
-    {
-        double sum = 500;
-        int days = calculateDays(currentDate, admission);
-        if (ward)
-            sum += (ward->getDailyRate() * days); // need to get days and multiply with daily rate
-        for (int i = 0; i < treatments.size(); i++)
-        {
-            sum += treatments[i].cost;
-        }
-        return Bill(sum);
-    }
-    Bill totalBill()
-    {
-        return generateBill();
-    }
-    void addTreatment(Treatment t)
-    {
-        treatments.push_back(t);
-    }
-    int treatmentCount()
-    {
-        return treatments.size();
-    }
-    void setWard(Ward *w)
-    {
-        ward = w;
-    }
-    bool getIsCritical()
-    {
-        return isCritical;
-    }
-    bool getScheduledOperation()
-    {
-        return scheduledOperation;
-    }
-    void scheduleOperation()
-    {
-        scheduledOperation = true;
-    }
-};
+Person::~Person() {}
 
-class StaffMember : public Person
+Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr) {}
+
+void Patient::display() const
 {
-protected:
-    double salary;
-    string department;
-
-public:
-    StaffMember(string n, Date d, int i, string c, double sal, string dept) : Person(n, d, i, c), salary(sal), department(dept) {}
-    virtual double calculateBillingRate() = 0;
-    virtual void display() override
+    Person::display();
+    cout << "Diagnosis: " << diagnosis << endl;
+    cout << "Date of admission: ";
+    admission.displayDate();
+    cout << "Ward: ";
+    if (ward)
+        cout << ward->getName() << endl;
+    else
+        cout << "N/A" << endl;
+    // treatments
+    for (int i = 0; i < treatments.size(); i++)
     {
-        Person::display();
-        cout << "Salary: Rs." << salary << endl;
-        cout << "Department: " << department << endl;
+        treatments[i].print();
     }
-};
+    if (isCritical)
+        cout << "Critical" << endl;
+    if (scheduledOperation)
+        cout << "Operation scheduled" << endl;
+    if (isDischarged)
+        cout << "Discharged" << endl;
+    cout << endl;
+}
 
-class GP : public StaffMember
+double Patient::totalBill() const
 {
-public:
-    GP(string n, Date d, int i, string c, double sal, string dept) : StaffMember(n, d, i, c, sal, dept) {}
-    // hourly consultation fee
-    double calculateBillingRate() override
+    double sum = 500;
+    int days = calculateDays(currentDate, admission);
+    if (ward)
+        sum += (ward->getDailyRate() * days); // need to get days and multiply with daily rate
+    for (int i = 0; i < treatments.size(); i++)
     {
-        return 500;
-    }
-    void display() override
-    {
-        StaffMember::display();
-        cout << "Hourly consultation fee: " << 500;
-    }
-};
+        sum += treatments[i].cost;
+    };
+    return sum;
+}
 
-class Surgeon : public StaffMember
+Bill Patient::generateBill() const
 {
-protected:
-    string specialisation;
-    // billing rate
-public:
-    Surgeon(string n, Date d, int i, string c, double sal, string dept, string s) : StaffMember(n, d, i, c, sal, dept), specialisation(s) {}
-    double calculateBillingRate() override
-    {
-        return 1000;
-    }
-    void display() override
-    {
-        StaffMember::display();
-        cout << "Per operation fee: " << 1000;
-    }
-};
+    return Bill(totalBill());
+}
 
-class Nurse : public StaffMember
+void Patient::addTreatment(const Treatment &t)
 {
-protected:
-    Ward *ward;
-    // billing rate
-public:
-    Nurse(string n, Date d, int i, string c, double sal, string dept, double f, Ward *w) : StaffMember(n, d, i, c, sal, dept), ward(w) {}
-    double calculateBillingRate() override
-    {
-        return 200;
-    }
-    void display() override
-    {
-        StaffMember::display();
-        cout << "Hourly care fee: " << 200;
-    }
-};
+    treatments.push_back(t);
+}
+
+int Patient::treatmentCount() const
+{
+    return treatments.size();
+}
+
+void Patient::setWard(Ward *w)
+{
+    ward = w;
+}
+
+string Patient::getWard() const
+{
+    if (ward)
+        return ward->getName();
+    else
+        return "N/A";
+}
+bool Patient::getIsCritical() const
+{
+    return isCritical;
+}
+
+bool Patient::getScheduledOperation() const
+{
+    return scheduledOperation;
+}
+
+void Patient::scheduleOperation(bool n)
+{
+    scheduledOperation = n;
+}
+
+void Patient::discharge(bool n)
+{
+    isDischarged = n;
+}
+
+bool Patient::discharged() const
+{
+    return isDischarged;
+}
+
+Patient::Patient(const Patient &other) : Person(other), diagnosis(other.diagnosis), admission(other.admission), ward(other.ward), treatments(other.treatments), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
+
+Patient::Patient(const Patient &&other) : Person(std::move(other)), diagnosis(std::move(other.diagnosis)), admission(std::move(other.admission)), ward(other.ward), treatments(std::move(other.treatments)), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
+
+StaffMember::StaffMember(string n, Date d, int i, string c, double sal, string dept) : Person(n, d, i, c), salary(sal), department(dept) {}
+
+void StaffMember::display() const
+{
+    Person::display();
+    cout << "Salary: Rs." << salary << endl;
+    cout << "Department: " << department << endl;
+}
+
+GP::GP(string n, Date d, int i, string c, double sal, string dept) : StaffMember(n, d, i, c, sal, dept) {}
+
+double GP::calculateBillingRate() const
+{
+    return 500;
+}
+
+void GP::display() const
+{
+    StaffMember::display();
+    cout << "Hourly consultation fee: " << 500;
+    cout << endl
+         << endl;
+}
+void GP::performCheckup(Patient &p) const
+{
+}
+
+Surgeon::Surgeon(string n, Date d, int i, string c, double sal, string dept, string s) : StaffMember(n, d, i, c, sal, dept), specialisation(s) {}
+
+double Surgeon::calculateBillingRate() const
+{
+    return 1000;
+}
+
+void Surgeon::display() const
+{
+    StaffMember::display();
+    cout << "Per operation fee: " << 1000;
+    cout << endl
+         << endl;
+}
+void Surgeon::performSurgery(Patient &p) const
+{
+    p.scheduleOperation(false);
+}
+Nurse::Nurse(string n, Date d, int i, string c, double sal, string dept) : StaffMember(n, d, i, c, sal, dept) {}
+
+double Nurse::calculateBillingRate() const
+{
+    return 200;
+}
+
+void Nurse::display() const
+{
+    StaffMember::display();
+    cout << "Hourly care fee: " << 200;
+    cout << endl
+         << endl;
+}

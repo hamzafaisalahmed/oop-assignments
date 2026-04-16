@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
-
+// make string constructor
 using namespace std;
 
 class Date
@@ -9,7 +9,7 @@ class Date
     int day, month, year;
 
 public:
-    bool isValidDate(int d, int m, int y)
+    bool isValidDate(int d, int m, int y) const
     {
         if (m < 1 || m > 12 || d < 1)
             return false;
@@ -64,19 +64,19 @@ public:
         month = 1;
         year = 2000;
     }
-    int getDay()
+    int getDay() const
     {
         return day;
     }
-    int getMonth()
+    int getMonth() const
     {
         return month;
     }
-    int getYear()
+    int getYear() const
     {
         return year;
     }
-    void displayDate()
+    void displayDate() const
     {
         cout << day << "/" << month << "/" << year << endl;
     }
@@ -94,7 +94,7 @@ public:
         }
     }
     // returns the number of days
-    friend int calculateDays(Date &curr, Date &other);
+    friend int calculateDays(const Date &curr, const Date &other);
 
     bool operator==(const Date &other) const
     {
@@ -105,7 +105,7 @@ public:
     }
 };
 
-int calculateDays(Date &curr, Date &other)
+int calculateDays(const Date &curr, const Date &other)
 {
     int maxDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     int currM = 0;

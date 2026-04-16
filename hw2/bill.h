@@ -1,36 +1,32 @@
+#pragma once
 #include <iostream>
-#include <vector>
 
-using namespace std;
-
-class Bill
+struct Bill
 {
-protected:
-    double totalBill;
-
-public:
-    Bill() : totalBill(0) {}
-    Bill(double t) : totalBill(t) {}
+    double amount;
+    Bill(double a) : amount(a) {}
+    Bill() : amount(0) {}
+    void print() const { std::cout << "Total Bill: " << amount << std::endl; }
     Bill operator+(const Bill &other) const
     {
-        return Bill(other.totalBill + totalBill);
+        return Bill(amount + other.amount);
     }
-    friend ostream &operator<<(ostream &os, const Bill &b);
     bool operator==(const Bill &other) const
     {
-        if (other.totalBill == totalBill)
-            return true;
-        else
-            return false;
+        return amount == other.amount;
     }
-    double total()
+    bool operator<(const Bill &other) const
     {
-        return totalBill;
+        return amount < other.amount;
+    }
+    bool operator>(const Bill &other) const
+    {
+        return amount > other.amount;
+    }
+    double total() const { return amount; }
+    friend ostream &operator<<(ostream &os, const Bill &b)
+    {
+        os << b.amount;
+        return os;
     }
 };
-
-ostream &operator<<(ostream &os, const Bill &b)
-{
-    os << b.totalBill;
-    return os;
-}

@@ -1,10 +1,9 @@
 #pragma once
-
-#include <iostream>
 #include <string>
 #include <vector>
 
-class Patient; // Forward declaration
+class Patient;
+class Hospital;
 
 class Ward
 {
@@ -16,18 +15,15 @@ protected:
 
 public:
     Ward(std::string n, int cap, double rate);
-    virtual ~Ward();
-
-    // Signatures only
     bool operator<(const Ward &other) const;
     bool operator>(const Ward &other) const;
     bool operator==(const Ward &other) const;
-
     virtual bool admit(Patient *p) = 0;
     bool discharge(Patient *p);
-
     double getDailyRate() const;
     std::string getName() const;
+    bool isAdmitted(Patient *p) const;
+    virtual ~Ward();
 };
 
 class GeneralWard : public Ward

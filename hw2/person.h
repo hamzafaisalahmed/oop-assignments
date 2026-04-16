@@ -1,14 +1,12 @@
 #pragma once
-
-#include <iostream>
 #include <string>
 #include <vector>
 #include "date.h"
+#include "ward.h"
 #include "treatment.h"
 #include "bill.h"
 
-class Ward;
-class Patient;
+extern Date currentDate;
 
 class Person
 {
@@ -20,8 +18,12 @@ protected:
 
 public:
     Person(std::string n, Date d, int i, std::string c);
-    virtual void display();
+    virtual void display() const;
+    int getId() const;
     virtual ~Person();
+    std::string getName() const { return name; }
+    Date getDob() const { return dob; }
+    std::string getContact() const { return contact; }
 };
 
 class Patient : public Person
@@ -37,18 +39,23 @@ protected:
 
 public:
     Patient(std::string n, Date d, int i, std::string c, std::string diag, Date adm, bool crit);
-    void display() override;
-
-    Bill generateBill();
-    Bill totalBill();
-
-    void addTreatment(Treatment t);
-    int treatmentCount();
+    void display() const override;
+    double totalBill() const;
+    Bill generateBill() const;
+    void addTreatment(const Treatment &t);
+    int treatmentCount() const;
     void setWard(Ward *w);
-
-    bool getIsCritical();
-    bool getScheduledOperation();
-    void scheduleOperation();
+    std::string getWard() const;
+    bool getIsCritical() const;
+    bool getScheduledOperation() const;
+    void scheduleOperation(bool n);
+    void discharge(bool n);
+    bool discharged() const;
+    std::string getDiagnosis() const { return diagnosis; }
+    void setDiagnosis(std::string diag) { diagnosis = diag; }
+    void setCritical(bool crit) { isCritical = crit; }
+    Patient(const Patient &other);
+    Patient(const Patient &&other);
 };
 
 class StaffMember : public Person
@@ -59,16 +66,18 @@ protected:
 
 public:
     StaffMember(std::string n, Date d, int i, std::string c, double sal, std::string dept);
-    virtual double calculateBillingRate() = 0;
-    virtual void display() override;
+    virtual double calculateBillingRate() const = 0;
+    virtual void display() const override;
+    std::string getDepartment() const { return department; }
 };
 
 class GP : public StaffMember
 {
 public:
     GP(std::string n, Date d, int i, std::string c, double sal, std::string dept);
-    double calculateBillingRate() override;
-    void display() override;
+    double calculateBillingRate() const override;
+    void display() const override;
+    void performCheckup(Patient &p) const;
 };
 
 class Surgeon : public StaffMember
@@ -78,8 +87,9 @@ protected:
 
 public:
     Surgeon(std::string n, Date d, int i, std::string c, double sal, std::string dept, std::string s);
-    double calculateBillingRate() override;
-    void display() override;
+    double calculateBillingRate() const override;
+    void display() const override;
+    void performSurgery(Patient &p) const;
 };
 
 class Nurse : public StaffMember
@@ -88,7 +98,7 @@ protected:
     Ward *ward;
 
 public:
-    Nurse(std::string n, std::string d, int i, std::string c, double sal, std::string dept, double f, Ward *w);
-    double calculateBillingRate() override;
-    void display() override;
+    Nurse(std::string n, Date d, int i, std::string c, double sal, std::string dept);
+    double calculateBillingRate() const override;
+    void display() const override;
 };

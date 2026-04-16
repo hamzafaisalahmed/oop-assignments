@@ -5,69 +5,60 @@
 #include "appointment.h"
 using namespace std;
 
-struct Appointment
-{
-    Patient *patient;
-    StaffMember *doctor;
-    Date date;
-    string time;
-    Appointment(Patient *p, StaffMember *e, Date d, string t) : patient(p), doctor(e), date(d), time(t) {}
-    bool operator==(const Appointment &other) const
-    {
-        return ((patient == other.patient) &&
-                (doctor == other.doctor) &&
-                (date == other.date) &&
-                (time == other.time));
-    }
-};
+Appointment::Appointment(Patient *p, StaffMember *e, Date d, string t) : patient(p), doctor(e), date(d), time(t) {}
 
-class AppointmentBook
+bool Appointment::operator==(const Appointment &other) const
 {
-protected:
-    vector<Appointment> appointments;
+    return ((patient == other.patient) &&
+            (doctor == other.doctor) &&
+            (date == other.date) &&
+            (time == other.time));
+}
 
-public:
-    bool add(const Appointment &app)
+bool AppointmentBook::add(const Appointment &app)
+{
+    for (auto x : appointments)
     {
-        for (auto x : appointments)
-        {
-            if ((x.doctor == app.doctor || x.patient == app.patient) && x.date == app.date && x.time == app.time) // doing extra check for patient too
-                return false;
-        }
-        appointments.push_back(app);
-        return true;
+        if ((x.doctor == app.doctor || x.patient == app.patient) && x.date == app.date && x.time == app.time) // doing extra check for patient too
+            return false;
     }
-    vector<Appointment> getAppointmentByStaff(StaffMember *s, Date d)
+    appointments.push_back(app);
+    return true;
+}
+
+vector<Appointment> AppointmentBook::getAppointmentByStaff(StaffMember *s, Date d) const
+{
+    vector<Appointment> temp;
+    for (auto &x : appointments)
     {
-        vector<Appointment> temp;
-        for (auto &x : appointments)
-        {
-            if (x.doctor == s && x.date == d)
-                temp.push_back(x);
-        }
-        return temp;
+        if (x.doctor == s && x.date == d)
+            temp.push_back(x);
     }
-    vector<Appointment> getAppointmentByPatient(Patient *p)
+    return temp;
+}
+
+vector<Appointment> AppointmentBook::getAppointmentByPatient(Patient *p) const
+{
+    vector<Appointment> temp;
+    for (auto &x : appointments)
     {
-        vector<Appointment> temp;
-        for (auto &x : appointments)
-        {
-            if (x.patient == p)
-                temp.push_back(x);
-        }
-        return temp;
+        if (x.patient == p)
+            temp.push_back(x);
     }
-    bool cancel(const Appointment &a)
+    return temp;
+}
+
+bool AppointmentBook::cancel(const Appointment &a)
+{
+    for (int i = 0; i < appointments.size(); i++)
     {
-        for (int i = 0; i < appointments.size(); i++)
+        if (a == appointments[i])
         {
-            if (a == appointments[i])
-            {
-                appointments.erase(appointments.begin() + i);
-                return true;
-            }
+            appointments.erase(appointments.begin() + i);
+            return true;
         }
-        return false;
     }
-    ~AppointmentBook() {}
-};
+    return false;
+}
+
+AppointmentBook::~AppointmentBook() {}
