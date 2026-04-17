@@ -231,6 +231,9 @@ int main()
         cout << s->getName() << ": PKR " << s->calculateBillingRate() << endl;
     }
 
+    assert((gp1.calculateBillingRate() != surgeon1.calculateBillingRate()) && (gp1.calculateBillingRate() != nurse1.calculateBillingRate()) && (surgeon1.calculateBillingRate() != nurse1.calculateBillingRate()));
+    check((gp1.calculateBillingRate() != surgeon1.calculateBillingRate()) && (gp1.calculateBillingRate() != nurse1.calculateBillingRate()) && (surgeon1.calculateBillingRate() != nurse1.calculateBillingRate()), "TC 09 passed");
+
     // =========================================================================
     cout << "\n========== TC-10: Ward Revenue ==========\n";
     // TC 10
@@ -253,9 +256,9 @@ int main()
     h.discharge(pb->getId());
     h.discharge(pc->getId());
     h.discharge(pd->getId());
-    cout << h.discharge(p1->getId());
-    cout << " " << h.discharge(p2->getId());
-    cout << " " << h.discharge(p3->getId());
+    h.discharge(p1->getId());
+    h.discharge(p2->getId());
+    h.discharge(p3->getId());
     // continue
 
     double revenue = h.wardRevenue("Ward A");
@@ -265,5 +268,7 @@ int main()
     assert(revenue == 33000.0);
 
     cout << "\n========== All test cases complete ==========\n";
+    // memory management
+    delete pa, pb, pc, pd, p1, p2, p3;
     return 0;
 }

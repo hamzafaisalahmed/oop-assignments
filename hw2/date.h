@@ -43,6 +43,9 @@ public:
         {
             throw invalid_argument("Please enter a valid date!");
         }
+        day = d;
+        month = m;
+        year = y;
     }
 
     Date()

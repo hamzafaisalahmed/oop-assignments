@@ -133,7 +133,7 @@ bool Patient::discharged() const
 
 Patient::Patient(const Patient &other) : Person(other), diagnosis(other.diagnosis), admission(other.admission), ward(other.ward), treatments(other.treatments), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
 
-Patient::Patient(const Patient &&other) : Person(std::move(other)), diagnosis(std::move(other.diagnosis)), admission(std::move(other.admission)), ward(other.ward), treatments(std::move(other.treatments)), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
+Patient::Patient(Patient &&other) : Person(std::move(other)), diagnosis(std::move(other.diagnosis)), admission(std::move(other.admission)), ward(other.ward), treatments(std::move(other.treatments)), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
 
 StaffMember::StaffMember(string n, Date d, int i, string c, double sal, string dept) : Person(n, d, i, c), salary(sal), department(dept) {}
 
@@ -160,6 +160,7 @@ void GP::display() const
 }
 void GP::performCheckup(Patient &p) const
 {
+    cout << "Checkup performed!" << endl;
 }
 
 Surgeon::Surgeon(string n, Date d, int i, string c, double sal, string dept, string s) : StaffMember(n, d, i, c, sal, dept), specialisation(s) {}

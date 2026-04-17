@@ -26,12 +26,6 @@ bool Ward::operator==(const Ward &other) const
     return ((double)patients.size() / capacity) == ((double)other.patients.size() / other.capacity);
 }
 
-bool Ward::admit(Patient &p)
-{
-    // pure virtual
-    return false;
-}
-
 bool Ward::discharge(Patient *p)
 {
     for (int i = 0; i < patients.size(); i++)

@@ -89,7 +89,7 @@ double Hospital::wardRevenue(string wardName) const
 {
     for (const auto &w : wards)
     {
-        if (w->getName() == wardName)
+        if (w && w->getName() == wardName)
         {
             double revenue = 0;
             for (const auto &p : archive)
@@ -143,14 +143,27 @@ void Hospital::removeWard(Ward *w)
 
 void Hospital::removeWard(std::string name)
 {
+    Ward *temp;
     for (auto &x : wards)
     {
         if (x->getName() == name)
         {
+            temp = x;
             wards.erase(remove(wards.begin(), wards.end(), x), wards.end());
-            return;
+            break;
         }
     }
+    if (temp)
+        delete temp;
+    return;
 }
 
-Hospital::~Hospital() {}
+Hospital::~Hospital()
+{
+    for (auto w : wards)
+
+    {
+        if (w)
+            delete w;
+    }
+}

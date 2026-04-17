@@ -58,7 +58,7 @@ public:
     void setDiagnosis(std::string diag) { diagnosis = diag; }
     void setCritical(bool crit) { isCritical = crit; }
     Patient(const Patient &other);
-    Patient(const Patient &&other);
+    Patient(Patient &&other);
 };
 
 class StaffMember : public Person
