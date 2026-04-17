@@ -38,13 +38,12 @@ protected:
     bool isDischarged;
     bool isCritical;
     bool scheduledOperation;
-    double alltimeBill;
 
 public:
     Patient(std::string n, Date d, int i, std::string c, std::string diag, Date adm, bool crit);
     void display() const override;
-    double totalBill();
-    Bill generateBill();
+    double totalBill() const;
+    Bill generateBill() const;
     void addTreatment(const Treatment &t);
     int treatmentCount() const;
     bool getPatientsByStaff(StaffMember *s) const;

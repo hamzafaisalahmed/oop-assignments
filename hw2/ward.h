@@ -23,6 +23,10 @@ public:
     double getDailyRate() const;
     std::string getName() const;
     bool isAdmitted(Patient *p) const;
+    int getCurrentSize() const
+    {
+        return patients.size();
+    }
     virtual ~Ward();
 };
 

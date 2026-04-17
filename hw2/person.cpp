@@ -28,7 +28,7 @@ int Person::getId() const
 
 Person::~Person() {}
 
-Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr), alltimeBill(0) {}
+Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr) {}
 
 void Patient::display() const
 {
@@ -55,7 +55,7 @@ void Patient::display() const
     cout << endl;
 }
 
-double Patient::totalBill()
+double Patient::totalBill() const
 {
     double sum = 500;
     int days = calculateDays(currentDate, admission);
@@ -66,16 +66,11 @@ double Patient::totalBill()
     {
         sum += treatments[i].cost;
     };
-    alltimeBill = sum;
     return sum;
 }
 
-Bill Patient::generateBill()
+Bill Patient::generateBill() const
 {
-    if (alltimeBill != 0)
-    {
-        return Bill(alltimeBill);
-    }
     return Bill(this->totalBill());
 }
 
@@ -185,7 +180,7 @@ void Surgeon::performSurgery(Patient &p) const
 {
     p.scheduleOperation(false);
 }
-Nurse::Nurse(string n, Date d, int i, string c, double sal, string dept) : StaffMember(n, d, i, c, sal, dept) {}
+Nurse::Nurse(string n, Date d, int i, string c, double sal, string dept) : StaffMember(n, d, i, c, sal, dept), ward(nullptr) {}
 
 double Nurse::calculateBillingRate() const
 {

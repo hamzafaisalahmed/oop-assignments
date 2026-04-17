@@ -141,4 +141,16 @@ void Hospital::removeWard(Ward *w)
     }
 }
 
+void Hospital::removeWard(std::string name)
+{
+    for (auto &x : wards)
+    {
+        if (x->getName() == name)
+        {
+            wards.erase(remove(wards.begin(), wards.end(), x), wards.end());
+            return;
+        }
+    }
+}
+
 Hospital::~Hospital() {}

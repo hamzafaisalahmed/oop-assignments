@@ -65,5 +65,6 @@ public:
     void addWard(Ward *w);
     void addStaff(StaffMember *s);
     void removeWard(Ward *w);
+    void removeWard(std::string name);
     ~Hospital();
 };
