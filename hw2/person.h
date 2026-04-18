@@ -34,10 +34,13 @@ protected:
     std::string diagnosis;
     Date admission;
     Ward *ward;
+    std::vector<StaffMember *> *staffMembers;
     std::vector<Treatment> treatments;
     bool isDischarged;
     bool isCritical;
     bool scheduledOperation;
+    double oldWardRate;
+    std::string oldWardName;
 
 public:
     Patient(std::string n, Date d, int i, std::string c, std::string diag, Date adm, bool crit);
@@ -59,6 +62,12 @@ public:
     void setCritical(bool crit) { isCritical = crit; }
     Patient(const Patient &other);
     Patient(Patient &&other);
+    void updateStaff(std::vector<StaffMember *> *s) { staffMembers = s; }
+    void updateWardInfo(double rate, std::string name)
+    {
+        oldWardRate = rate;
+        oldWardName = name;
+    }
 };
 
 class StaffMember : public Person

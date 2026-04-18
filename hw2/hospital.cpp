@@ -22,6 +22,7 @@ void Hospital::admit(Patient &p)
             p.discharge(false);
             activePatients.push_back(&p);
             archive.erase(remove(archive.begin(), archive.end(), x), archive.end());
+            p.updateStaff(&staff);
             return;
         }
     }
@@ -30,6 +31,7 @@ void Hospital::admit(Patient &p)
         if (x->admit(p))
         {
             activePatients.push_back(&p);
+            p.updateStaff(&staff);
             return;
         }
     }
@@ -47,6 +49,8 @@ Bill Hospital::discharge(int id)
                 {
                     archive.push_back(p);
                     p->discharge(true);
+                    p->updateWardInfo(x->getDailyRate(), x->getName());
+                    p->setWard(nullptr);
                     activePatients.erase(remove(activePatients.begin(), activePatients.end(), p), activePatients.end());
                     break;
                 }
@@ -143,7 +147,7 @@ void Hospital::removeWard(Ward *w)
 
 void Hospital::removeWard(std::string name)
 {
-    Ward *temp;
+    Ward *temp = nullptr;
     for (auto &x : wards)
     {
         if (x->getName() == name)

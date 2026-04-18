@@ -28,7 +28,7 @@ int Person::getId() const
 
 Person::~Person() {}
 
-Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr) {}
+Patient::Patient(string n, Date d, int i, string c, string diag, Date adm, bool crit) : Person(n, d, i, c), diagnosis(diag), admission(adm), isDischarged(false), isCritical(crit), scheduledOperation(false), ward(nullptr), staffMembers(nullptr), oldWardRate(0), oldWardName("") {}
 
 void Patient::display() const
 {
@@ -59,12 +59,26 @@ double Patient::totalBill() const
 {
     double sum = 500;
     int days = calculateDays(currentDate, admission);
-
     if (ward)
         sum += (ward->getDailyRate() * days);
+    else
+    {
+        sum += (oldWardRate * days);
+    }
     for (int i = 0; i < treatments.size(); i++)
     {
         sum += treatments[i].cost;
+        if (staffMembers)
+        {
+            for (const auto &x : *staffMembers)
+            {
+                if (x->getName() == treatments[i].doctorName)
+                {
+                    sum += x->calculateBillingRate();
+                    break;
+                }
+            }
+        }
     };
     return sum;
 }
@@ -103,6 +117,8 @@ string Patient::getWard() const
 {
     if (ward)
         return ward->getName();
+    else if (oldWardName != "")
+        return oldWardName;
     else
         return "N/A";
 }
@@ -131,9 +147,9 @@ bool Patient::discharged() const
     return isDischarged;
 }
 
-Patient::Patient(const Patient &other) : Person(other), diagnosis(other.diagnosis), admission(other.admission), ward(other.ward), treatments(other.treatments), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
+Patient::Patient(const Patient &other) : Person(other), diagnosis(other.diagnosis), admission(other.admission), ward(other.ward), treatments(other.treatments), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation), staffMembers(other.staffMembers), oldWardRate(other.oldWardRate), oldWardName(other.oldWardName) {}
 
-Patient::Patient(Patient &&other) : Person(std::move(other)), diagnosis(std::move(other.diagnosis)), admission(std::move(other.admission)), ward(other.ward), treatments(std::move(other.treatments)), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation) {}
+Patient::Patient(Patient &&other) : Person(std::move(other)), diagnosis(std::move(other.diagnosis)), admission(std::move(other.admission)), ward(other.ward), treatments(std::move(other.treatments)), isDischarged(other.isDischarged), isCritical(other.isCritical), scheduledOperation(other.scheduledOperation), staffMembers(other.staffMembers), oldWardRate(other.oldWardRate), oldWardName(other.oldWardName) {}
 
 StaffMember::StaffMember(string n, Date d, int i, string c, double sal, string dept) : Person(n, d, i, c), salary(sal), department(dept) {}
 

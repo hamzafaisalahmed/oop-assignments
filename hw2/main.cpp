@@ -239,12 +239,14 @@ int main()
     // TC 10
     // add the 3 patients and Ward A
     h.addWard(new GeneralWard("Ward A", 10));
+    StaffMember *doc = new GP("Dr. Alvi ", dob, 101, "0300-0000001", 50000, "OPD");
+    h.addStaff(doc);
     Patient *p1 = new Patient("Patient 1", dob, 1000, "...", "Broken leg", currentDate, false);
     Patient *p2 = new Patient("Patient 2", dob, 1001, "...", "Cardiac arrest", currentDate, false);
     Patient *p3 = new Patient("Patient 3", dob, 1002, "...", "Flu", currentDate, false);
-    p1->addTreatment(Treatment(" Blood test ", 10000 - 500, "Dr. Alvi "));
-    p2->addTreatment(Treatment(" Blood test ", 15000 - 500, "Dr. Alvi "));
-    p3->addTreatment(Treatment(" Blood test ", 8000 - 500, "Dr. Alvi "));
+    p1->addTreatment(Treatment(" Blood test ", 10000 - 500 - 500, "Dr. Alvi ")); // 500 ward fee, 500 GP fee
+    p2->addTreatment(Treatment(" Blood test ", 15000 - 500 - 500, "Dr. Alvi "));
+    p3->addTreatment(Treatment(" Blood test ", 8000 - 500 - 500, "Dr. Alvi "));
 
     // now admit the 3 patients
     h.admit(*p1);
@@ -269,6 +271,13 @@ int main()
 
     cout << "\n========== All test cases complete ==========\n";
     // memory management
-    delete pa, pb, pc, pd, p1, p2, p3;
+    delete pa;
+    delete pb;
+    delete pc;
+    delete pd;
+    delete p1;
+    delete p2;
+    delete p3;
+    delete doc;
     return 0;
 }
