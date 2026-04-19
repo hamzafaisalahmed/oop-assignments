@@ -39,26 +39,28 @@ void Hospital::admit(Patient &p)
 
 Bill Hospital::discharge(int id)
 {
-    for (auto &p : activePatients)
+    Bill final(0);
+    for (int i = 0; i < activePatients.size(); i++)
     {
-        if (id == p->getId())
+        if (id == activePatients[i]->getId())
         {
+            Patient *p = activePatients[i];
             for (auto &x : wards)
             {
                 if (x->discharge(p))
                 {
-                    archive.push_back(p);
                     p->discharge(true);
                     p->updateWardInfo(x->getDailyRate(), x->getName());
                     p->setWard(nullptr);
-                    activePatients.erase(remove(activePatients.begin(), activePatients.end(), p), activePatients.end());
-                    break;
+                    final = final + p->generateBill();
+                    archive.push_back(move(p));
+                    activePatients.erase(activePatients.begin() + i);
+                    return final;
                 }
             }
-            return p->generateBill();
         }
     }
-    throw invalid_argument("Patient not admitted");
+    throw invalid_argument("Patient not found");
 }
 
 bool Hospital::isAdmitted(int id) const
