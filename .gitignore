@@ -3,9 +3,12 @@
 
 # Ignore all PDF documents
 *.pdf
-
+*.zip
 # Optional: Ignore VS Code settings and build folders
 .vscode/
 bin/
 obj/
 zip/
+*.xlsx
+*.xls
+*.csv
