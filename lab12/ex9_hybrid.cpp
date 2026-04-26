@@ -39,6 +39,7 @@ int partition(vector<int> &arr, int l, int h)
 {
     int pivotIndex = medianOfThree(arr, l, h);
     int pivot = arr[pivotIndex];
+    swap(arr[pivotIndex], arr[h]);
     int i = l - 1;
 
     for (int j = l; j < h; j++)
@@ -50,7 +51,7 @@ int partition(vector<int> &arr, int l, int h)
             swap(arr[i], arr[j]);
         }
     }
-    swap(arr[i + 1], arr[pivotIndex]);
+    swap(arr[i + 1], arr[h]);
     return i + 1;
 }
 
