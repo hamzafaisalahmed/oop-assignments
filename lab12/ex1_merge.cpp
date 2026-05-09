@@ -2,10 +2,24 @@
 #include <vector>
 using namespace std;
 
+void display(const vector<int> &arr)
+{
+    for (int i = 0; i < arr.size(); i++)
+    {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
 void merge(vector<int> &arr, int l, int mid, int r)
 {
     vector<int> L(arr.begin() + l, arr.begin() + mid + 1);
     vector<int> R(arr.begin() + mid + 1, arr.begin() + r + 1);
+
+    cout << "Left array: " << endl;
+    display(L);
+    cout << "Right array: " << endl;
+    display(R);
 
     int i = 0, j = 0, k = l;
     while (i < (int)L.size() && j < (int)R.size())
@@ -31,16 +45,11 @@ void mergeSort(vector<int> &arr, int l, int r)
     mergeSort(arr, l, mid);
     mergeSort(arr, mid + 1, r);
     merge(arr, l, mid, r);
-}
-
-void display(const vector<int> &arr)
-{
-    for (int i = 0; i < arr.size(); i++)
-    {
-        cout << arr[i] << " ";
-    }
+    cout << "Array after merge: " << endl;
+    display(arr);
     cout << endl;
 }
+
 int main()
 {
     vector<int> v{38, 27, 43, 3, 9};
